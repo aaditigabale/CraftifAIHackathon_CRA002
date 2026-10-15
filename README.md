@@ -15,10 +15,10 @@
 You can experience the live production prototype directly in your browser without installing dependencies:
 
 - **🔴 Live Sentinel Interactive Dashboard:**  
-  👉 **[https://5f934f51a69de6.lhr.life](https://5f934f51a69de6.lhr.life)** *(Public HTTPS URL)*  
+  👉 **[https://333fb96bc2a075.lhr.life](https://333fb96bc2a075.lhr.life)** *(Public HTTPS URL)*  
   *(Alternative Localhost URL: [http://localhost:3000](http://localhost:3000))*
 - **📊 Stage 2 Pipeline IR Interactive Visualizer:**  
-  👉 **[https://5f934f51a69de6.lhr.life/pipeline_visualizer.html](https://5f934f51a69de6.lhr.life/pipeline_visualizer.html)**  
+  👉 **[https://333fb96bc2a075.lhr.life/pipeline_visualizer.html](https://333fb96bc2a075.lhr.life/pipeline_visualizer.html)**  
   *(Interactive DeepStream DAG node graph for submission evidence and architecture inspection)*
 
 ---
