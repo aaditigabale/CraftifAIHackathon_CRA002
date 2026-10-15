@@ -1,0 +1,24 @@
+{
+  "name": "workplace-safety-sentinel-pipegen",
+  "version": "1.0.0",
+  "description": "CraftifAI Physical AI Hackathon - PipeGen Workplace Safety Sentinel with DeepStream, TensorRT, and Closed-Loop ESP32 Action",
+  "main": "live_sentinel_dashboard/server.js",
+  "scripts": {
+    "start": "node live_sentinel_dashboard/server.js",
+    "dashboard": "node live_sentinel_dashboard/server.js",
+    "test": "node stage4_compiler/validate_pipeline.js"
+  },
+  "keywords": [
+    "craftifai",
+    "pipegen",
+    "deepstream",
+    "tensorrt",
+    "physical-ai",
+    "firmgen",
+    "esp32",
+    "mqtt",
+    "int8"
+  ],
+  "author": "Physical AI Hackathon Team",
+  "license": "Apache-2.0"
+}

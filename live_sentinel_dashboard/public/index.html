@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CraftifAI PipeGen — Workplace Safety Sentinel</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Header -->
+    <header class="top-nav">
+      <div class="nav-brand">
+        <div class="logo-badge">Physical AI</div>
+        <div class="brand-text">
+          <h1>Workplace Safety Sentinel</h1>
+          <span class="subtext">Powered by CraftifAI PipeGen v0.5.1 &amp; DeepStream 6.3</span>
+        </div>
+      </div>
+
+      <div class="nav-stats">
+        <div class="stat-pill">
+          <span class="stat-label">Inference Engine</span>
+          <span class="stat-val highlight" id="activeEngineText">TensorRT INT8</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-label">Throughput</span>
+          <span class="stat-val text-green" id="fpsCounter">432.9 FPS</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-label">Latency</span>
+          <span class="stat-val text-cyan" id="latencyCounter">2.31 ms</span>
+        </div>
+        <div class="stat-pill">
+          <span class="stat-label">Frames</span>
+          <span class="stat-val" id="framesCounter">12,450</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Grid -->
+    <main class="dashboard-grid">
+      <!-- Left Column: Video Feed & Detection Canvas -->
+      <section class="panel video-panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <span class="live-indicator"></span>
+            <h2>Camera Feed: Bay-4 Heavy Machinery Workcell (1080p)</h2>
+          </div>
+          <div class="panel-actions">
+            <button class="btn btn-outline" id="toggleZonesBtn">Toggle Zones</button>
+            <button class="btn btn-outline" id="toggleBBoxesBtn">Toggle BBoxes</button>
+            <a href="/pipeline_visualizer.html" target="_blank" class="btn btn-outline">Stage 2 Pipeline IR ↗</a>
+          </div>
+        </div>
+
+        <div class="canvas-wrapper">
+          <canvas id="visionCanvas" width="1280" height="720"></canvas>
+          <div class="canvas-overlay-banner" id="dangerBanner">
+            ⚠ CRITICAL HAZARD: UNAUTHORIZED WORKER IN KEEP-OUT ZONE ⚠
+          </div>
+        </div>
+
+        <div class="control-bar">
+          <button class="btn btn-danger" id="triggerIntrusionBtn">⚡ Simulate Red Zone Intrusion</button>
+          <button class="btn btn-success" id="resetEstopBtn">✓ Clear Safety Interlock (Reset)</button>
+          <button class="btn btn-secondary" id="toggleEngineBtn">Switch Precision: INT8 ⇋ FP16</button>
+        </div>
+      </section>
+
+      <!-- Right Column: Closed-Loop ESP32 & Alert Feeds -->
+      <aside class="sidebar">
+        <!-- Physical AI Closed-Loop Hardware Card -->
+        <div class="panel hardware-card">
+          <div class="panel-header">
+            <h2>ESP32 Physical AI Node (Closed Loop)</h2>
+            <span class="badge badge-purple" id="bleName">FirmGen_9B</span>
+          </div>
+
+          <div class="hardware-status-grid">
+            <div class="hw-item" id="relayStatusBox">
+              <span class="hw-label">Safety Relay (E-Stop)</span>
+              <span class="hw-value" id="relayStatus">ENGAGED (HALT)</span>
+            </div>
+            <div class="hw-item" id="strobeStatusBox">
+              <span class="hw-label">Warning Strobe</span>
+              <span class="hw-value" id="strobeStatus">4Hz FLASHING</span>
+            </div>
+            <div class="hw-item" id="buzzerStatusBox">
+              <span class="hw-label">Piezo Siren</span>
+              <span class="hw-value" id="buzzerStatus">2400 Hz ACTIVE</span>
+            </div>
+            <div class="hw-item">
+              <span class="hw-label">Bridge Protocol</span>
+              <span class="hw-value">MQTT / Serial 115200</span>
+            </div>
+          </div>
+
+          <div class="telemetry-box">
+            <div class="telem-header">Live Intelligence Runtime Telemetry</div>
+            <div class="telem-row">
+              <span>Free Heap:</span>
+              <strong id="telemHeap">244,920 bytes</strong>
+            </div>
+            <div class="telem-row">
+              <span>Uptime:</span>
+              <strong id="telemUptime">142s</strong>
+            </div>
+            <div class="telem-row">
+              <span>Response Latency:</span>
+              <strong style="color: #34d399;">&lt; 5.2 ms</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Real-Time MQTT Incident Log -->
+        <div class="panel alerts-panel">
+          <div class="panel-header">
+            <h2>Real-Time MQTT Alert Stream</h2>
+            <span class="topic-tag">safety/sentinel/alerts</span>
+          </div>
+
+          <div class="alerts-list" id="alertsList">
+            <!-- Dynamic Alert Cards rendered by app.js -->
+          </div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

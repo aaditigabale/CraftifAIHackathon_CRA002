@@ -1,0 +1,58 @@
+# ==============================================================================
+# CraftifAI PipeGen v0.5.1 - Stage 5: Gst-nvinfer Primary Inference Configuration
+# Model: YOLOv8s INT8 TensorRT Engine
+# ==============================================================================
+
+[property]
+gpu-id=0
+net-scale-factor=0.00392156862745098
+model-color-format=0
+onnx-file=../stage3_model/yolov8s_safety.onnx
+model-engine-file=../stage4_compiler/model_yolov8s_safety_int8.engine
+int8-calib-file=../stage4_compiler/calibration_int8.cache
+labelfile-path=../stage3_model/labels.txt
+batch-size=1
+network-mode=1
+num-detected-classes=6
+interval=0
+gie-unique-id=1
+process-mode=1
+network-type=0
+cluster-mode=2
+maintain-aspect-ratio=1
+symmetric-padding=1
+workspace-size=2048
+
+# Custom bounding box parser for YOLOv8
+custom-lib-path=/opt/nvidia/deepstream/deepstream/lib/libnvds_infercustomparser.so
+custom-parse-bbox-func=NvDsInferParseYolo
+
+[class-attrs-all]
+pre-cluster-threshold=0.45
+topk=100
+nms-iou-threshold=0.5
+
+# Class-specific thresholds
+[class-attrs-0]
+# person
+pre-cluster-threshold=0.50
+roi-top-offset=0
+roi-bottom-offset=0
+detected-min-w=40
+detected-min-h=60
+
+[class-attrs-1]
+# hard_hat
+pre-cluster-threshold=0.60
+
+[class-attrs-2]
+# safety_vest
+pre-cluster-threshold=0.60
+
+[class-attrs-3]
+# no_hard_hat
+pre-cluster-threshold=0.55
+
+[class-attrs-4]
+# no_safety_vest
+pre-cluster-threshold=0.55

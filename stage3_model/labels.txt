@@ -1,0 +1,6 @@
+person
+hard_hat
+safety_vest
+no_hard_hat
+no_safety_vest
+machinery

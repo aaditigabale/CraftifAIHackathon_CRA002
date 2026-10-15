@@ -1,0 +1,47 @@
+# ==============================================================================
+# CraftifAI PipeGen v0.5.1 - Stage 5: Gst-nvdsanalytics Spatial Rules Configuration
+# Defines Hazard Zone Polygons & Directional Crossing Lines
+# ==============================================================================
+
+[property]
+enable=1
+osd-mode=2
+display-font-size=12
+
+# ------------------------------------------------------------------------------
+# Stream 0: Industrial Surveillance Camera Feed
+# ------------------------------------------------------------------------------
+
+# Polygon 1: Robotic Arm Perimeter Keep-Out (Red Hazard Zone)
+[roi-filtering-stream-0]
+enable=1
+roi-RF_Machinery_Red=620;240;1050;240;1150;660;560;660
+inverse-roi=0
+class-id=0
+
+# Overcrowding / Dwell Time in Red Zone
+[overcrowding-stream-0]
+enable=1
+roi-OC_Hazard_Alpha=620;240;1050;240;1150;660;560;660
+object-threshold=1
+class-id=0
+
+# Polygon 2: Conveyor Logistics Zone (Yellow Caution Zone)
+[roi-filtering-stream-0-sub]
+enable=1
+roi-RF_Conveyor_Yellow=100;320;500;320;480;680;60;680
+inverse-roi=0
+class-id=0
+
+# Directional Tripwire: Restricted Threshold Crossing
+[line-crossing-stream-0]
+enable=1
+line-crossing-LC_Perimeter=540;180;540;700;580;400;500;400
+class-id=0
+extended=1
+
+# Direction Detection
+[direction-detection-stream-0]
+enable=1
+direction-DD_Towards_Robotics=540;400;620;400
+class-id=0

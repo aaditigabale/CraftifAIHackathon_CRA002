@@ -1,0 +1,37 @@
+```mermaid
+graph TD
+    classDef input fill:#1e293b,stroke:#3b82f6,stroke-width:2px,color:#f8fafc;
+    classDef compute fill:#0f172a,stroke:#10b981,stroke-width:2px,color:#f8fafc;
+    classDef ai fill:#042f2e,stroke:#14b8a6,stroke-width:3px,color:#5eead4;
+    classDef broker fill:#3b0764,stroke:#a855f7,stroke-width:2px,color:#f3e8ff;
+    classDef sink fill:#311010,stroke:#ef4444,stroke-width:2px,color:#fee2e2;
+
+    SRC["Source (CSI/USB/RTSP/File)<br><i>nvv4l2decoder</i>"]:::input
+    MUX["Batch Stream Muxer<br><i>nvstreammux (1080p, Batch 1)</i>"]:::compute
+    PGIE["Primary Inference (YOLOv8s INT8)<br><i>nvinfer / TensorRT 8.6</i>"]:::ai
+    TRK["Multi-Object Tracker<br><i>nvtracker (NvSORT/DeepSORT)</i>"]:::compute
+    ANL["Spatial Analytics<br><i>nvdsanalytics (Keep-Out Polygons)</i>"]:::compute
+    OSD["On-Screen Display<br><i>nvdsosd (Bounding Box & Warning OSD)</i>"]:::compute
+    TEE{"GStreamer Tee"}:::compute
+    
+    MSGCONV["Payload Generator<br><i>nvmsgconv (JSON Alert Schema)</i>"]:::broker
+    MSGBROKER["MQTT Publisher<br><i>nvmsgbroker (topic: safety/sentinel)</i>"]:::broker
+    ESP32["Physical AI Closed-Loop Node<br><i>ESP32 Microcontroller (Buzzer & Relay)</i>"]:::sink
+    
+    SINK_DISP["Local Video Display<br><i>nveglglessink (X11 / Wayland)</i>"]:::sink
+    SINK_RTSP["RTSP Analytics Feed<br><i>rtspclientsink (:8554/live)</i>"]:::sink
+
+    SRC --> MUX
+    MUX --> PGIE
+    PGIE --> TRK
+    TRK --> ANL
+    ANL --> OSD
+    OSD --> TEE
+    
+    TEE --> MSGCONV
+    MSGCONV --> MSGBROKER
+    MSGBROKER -. "MQTT / Serial Trigger" .-> ESP32
+    
+    TEE --> SINK_DISP
+    TEE --> SINK_RTSP
+```

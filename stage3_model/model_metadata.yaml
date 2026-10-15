@@ -1,0 +1,31 @@
+apiVersion: craftifai.com/v1alpha1
+kind: ModelDefinition
+metadata:
+  name: yolov8s-industrial-safety
+  version: 2.1.0
+  tags:
+    - edge-ai
+    - deepstream
+    - tensorrt
+    - industrial-safety
+    - ppe
+spec:
+  domain: vision-object-detection
+  backbone: CSPDarknet
+  weights_format: ONNX
+  onnx_opset: 17
+  input_resolution: [640, 640]
+  supported_precisions:
+    - FP32
+    - FP16
+    - INT8
+  tensorrt_optimization:
+    builder_flags:
+      - kFP16
+      - kINT8
+    workspace_size_mb: 2048
+    dla_cores: 2
+  deepstream_plugin:
+    plugin_name: nvinfer
+    custom_lib_path: /opt/nvidia/deepstream/deepstream/lib/libnvds_infercustomparser.so
+    custom_parse_bbox_func: NvDsInferParseYolo

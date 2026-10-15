@@ -1,0 +1,48 @@
+{
+  "frame_resolution": {
+    "width": 1280,
+    "height": 720
+  },
+  "hazard_zones": [
+    {
+      "zone_id": "zone_red_alpha",
+      "name": "Robotic Workcell Keep-Out",
+      "severity": "CRITICAL",
+      "color_rgba": [255, 40, 40, 0.45],
+      "polygon": [
+        {"x": 620, "y": 240},
+        {"x": 1050, "y": 240},
+        {"x": 1150, "y": 660},
+        {"x": 560, "y": 660}
+      ],
+      "policy": "STRICT_KEEP_OUT",
+      "mandatory_ppe": ["hard_hat", "safety_vest"],
+      "trigger_action": "EMERGENCY_STOP_MACHINERY_AND_STROBE"
+    },
+    {
+      "zone_id": "zone_yellow_beta",
+      "name": "Conveyor Logistics Caution Zone",
+      "severity": "WARNING",
+      "color_rgba": [255, 200, 20, 0.35],
+      "polygon": [
+        {"x": 100, "y": 320},
+        {"x": 500, "y": 320},
+        {"x": 480, "y": 680},
+        {"x": 60, "y": 680}
+      ],
+      "policy": "PPE_ENFORCEMENT",
+      "mandatory_ppe": ["hard_hat"],
+      "trigger_action": "AUDIO_CHIME_AND_DISPLAY_WARNING"
+    }
+  ],
+  "crossing_lines": [
+    {
+      "line_id": "tripwire_gamma",
+      "name": "Perimeter Boundary Line",
+      "p1": {"x": 540, "y": 180},
+      "p2": {"x": 540, "y": 700},
+      "direction": "EAST_TO_WEST",
+      "trigger_action": "LOG_ENTRY_COUNT"
+    }
+  ]
+}

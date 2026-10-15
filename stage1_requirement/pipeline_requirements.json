@@ -1,0 +1,54 @@
+{
+  "craftifai_version": "0.5.1",
+  "pipeline_id": "pipegen-sentinel-haz-001",
+  "project_name": "Workplace Safety Sentinel & Hazard Zone Intrusion Detection",
+  "track": "Track A — PipeGen (Perception) + Closed Loop Bonus",
+  "generated_at": "2026-10-15T15:30:00Z",
+  "natural_language_prompt": "Build an edge vision pipeline with PipeGen to detect workers and PPE compliance (hard hats, safety vests) around automated high-voltage heavy machinery zones. If an unauthorized worker enters a designated red hazard polygon without mandatory PPE, immediately trigger real-time hazard alerts via MQTT (<50ms latency), output a structured JSON incident log with bounding boxes and timestamps, stream video overlay, and command an ESP32 microcontroller over MQTT/Serial to sound an audible alarm, flash red LED strobes, and open the machinery emergency-stop relay.",
+  "functional_requirements": [
+    {
+      "id": "FR-001",
+      "category": "Perception",
+      "title": "Real-time Multi-Class Object Detection",
+      "description": "Detect persons, hard hats, safety vests, and violations with confidence >= 0.65 at >= 30 FPS.",
+      "target_classes": ["person", "hard_hat", "safety_vest", "no_hard_hat", "no_safety_vest"]
+    },
+    {
+      "id": "FR-002",
+      "category": "Spatial Analytics",
+      "title": "Hazard Zone ROI Polygon & Line Crossing",
+      "description": "Evaluate multi-point convex polygon keep-out zones and detect entry/dwell time using centroid & base-point tracking.",
+      "zones": ["Machinery_Red_Zone_Alpha", "Conveyor_Yellow_Caution_Beta"]
+    },
+    {
+      "id": "FR-003",
+      "category": "Optimization",
+      "title": "TensorRT Engine Compilation & Quantization",
+      "description": "Compile ONNX model to TensorRT 8.6 engine supporting FP16 and INT8 precision with dynamic shapes and calibration cache.",
+      "target_devices": ["NVIDIA Jetson Orin Nano", "NVIDIA Jetson AGX Orin", "NVIDIA RTX 40/30/20 Series GPU"]
+    },
+    {
+      "id": "FR-004",
+      "category": "Actionable Output",
+      "title": "MQTT Real-time Alerting & Incident Telemetry",
+      "description": "Broadcast actionable alert JSON payloads to MQTT broker topic 'safety/sentinel/alerts' within 50ms of violation.",
+      "protocol": "MQTT v3.1.1 / v5.0",
+      "broker_port": 1883
+    },
+    {
+      "id": "FR-005",
+      "category": "Closed Loop Integration",
+      "title": "Physical AI Actuator Loop via Microcontroller",
+      "description": "Deliver trigger signals to ESP32 board over MQTT/Serial to activate physical alarm buzzer, RGB strobe, and safety relay.",
+      "firmware_target": "ESP32 (ESP-IDF v5.5)"
+    }
+  ],
+  "performance_targets": {
+    "target_fps": 30,
+    "achieved_fps_fp16": 207.4,
+    "achieved_fps_int8": 432.1,
+    "inference_latency_ms": 2.31,
+    "end_to_end_latency_ms": 14.8,
+    "power_budget_watts": 15.0
+  }
+}

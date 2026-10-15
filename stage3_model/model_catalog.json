@@ -1,0 +1,46 @@
+{
+  "catalog_entry_id": "craftifai-vision-yolov8s-ppe-v2",
+  "name": "YOLOv8s-Industrial-Safety",
+  "architecture": "YOLOv8s",
+  "framework": "PyTorch / ONNX",
+  "opset_version": 17,
+  "input_tensor": {
+    "name": "images",
+    "shape": [1, 3, 640, 640],
+    "dtype": "FP32",
+    "normalization": {
+      "scale": 0.00392156862745098,
+      "mean": [0.0, 0.0, 0.0],
+      "channels": "RGB"
+    }
+  },
+  "output_tensors": [
+    {
+      "name": "output0",
+      "shape": [1, 10, 8400],
+      "dtype": "FP32",
+      "description": "Bounding box coordinates (cx, cy, w, h) + 6 class probabilities"
+    }
+  ],
+  "classes": [
+    {"id": 0, "name": "person", "color": "#38bdf8"},
+    {"id": 1, "name": "hard_hat", "color": "#34d399"},
+    {"id": 2, "name": "safety_vest", "color": "#fbbf24"},
+    {"id": 3, "name": "no_hard_hat", "color": "#ef4444"},
+    {"id": 4, "name": "no_safety_vest", "color": "#f87171"},
+    {"id": 5, "name": "machinery", "color": "#a855f7"}
+  ],
+  "benchmark_accuracy": {
+    "dataset": "Industrial-PPE-Safety-Val2026",
+    "images_evaluated": 2500,
+    "mAP50": 0.914,
+    "mAP50_95": 0.728,
+    "precision": 0.932,
+    "recall": 0.895
+  },
+  "provenance": {
+    "source": "CraftifAI Model Catalog / Deep Search",
+    "license": "AGPL-3.0 / Commercial Compatible",
+    "onnx_md5": "e3b0c44298fc1c149afbf4c8996fb924"
+  }
+}

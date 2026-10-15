@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PipeGen Stage 2 — Pipeline IR Node Graph Visualizer</title>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --card-bg: #151d2f;
+      --border: #23314d;
+      --text: #f1f5f9;
+      --accent-blue: #38bdf8;
+      --accent-green: #34d399;
+      --accent-purple: #c084fc;
+      --accent-red: #f87171;
+      --accent-orange: #fb923c;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+    header {
+      padding: 1rem 1.5rem;
+      background: #0f172a;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .title-group h1 { font-size: 1.25rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 0.5rem; }
+    .badge {
+      font-size: 0.75rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 9999px;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--accent-blue);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      font-weight: 600;
+    }
+    .badge-closed-loop {
+      background: rgba(192, 132, 252, 0.15);
+      color: var(--accent-purple);
+      border-color: rgba(192, 132, 252, 0.3);
+    }
+    .main-container {
+      display: flex;
+      flex: 1;
+      height: calc(100vh - 65px);
+    }
+    .graph-pane {
+      flex: 1;
+      position: relative;
+      background: radial-gradient(circle at center, #131b2e 0%, #0b0f19 100%);
+      overflow: auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+    svg.canvas {
+      width: 1100px;
+      height: 650px;
+    }
+    .details-pane {
+      width: 360px;
+      background: var(--card-bg);
+      border-left: 1px solid var(--border);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      overflow-y: auto;
+    }
+    .details-card {
+      background: #0d1424;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+    .details-card h3 { font-size: 0.9rem; color: var(--accent-blue); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em; }
+    .prop-row { display: flex; justify-content: space-between; margin-bottom: 0.4rem; font-size: 0.85rem; }
+    .prop-row .label { color: #94a3b8; }
+    .prop-row .val { font-family: monospace; color: #f8fafc; font-weight: 600; }
+    .btn-screenshot {
+      background: var(--accent-blue);
+      color: #0b0f19;
+      font-weight: 700;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-screenshot:hover { background: #7dd3fc; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="title-group">
+      <h1>CraftifAI PipeGen v0.5.1 — Pipeline IR Graph</h1>
+      <span class="badge">NVIDIA DeepStream 6.3</span>
+      <span class="badge badge-closed-loop">Closed Loop Bonus: ESP32 Actuator</span>
+    </div>
+    <div>
+      <button class="btn-screenshot" onclick="alert('Take a screenshot of this view to submit as Stage 2 Evidence!')">Capture Evidence View</button>
+    </div>
+  </header>
+
+  <div class="main-container">
+    <div class="graph-pane">
+      <svg class="canvas" viewBox="0 0 1100 650">
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+            <path d="M 0 1 L 10 5 L 0 9 z" fill="#38bdf8" />
+          </marker>
+          <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#38bdf8" flood-opacity="0.25"/>
+          </filter>
+        </defs>
+
+        <!-- Pipeline Edges -->
+        <path d="M 170 120 L 260 120" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#arrow)" />
+        <path d="M 430 120 L 520 120" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#arrow)" />
+        <path d="M 690 120 L 780 120" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#arrow)" />
+        <path d="M 865 170 L 865 240" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#arrow)" />
+        <path d="M 780 290 L 690 290" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#arrow)" />
+        <path d="M 520 290 L 430 290" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#arrow)" />
+        <path d="M 345 340 L 345 420" stroke="#38bdf8" stroke-width="2.5" marker-end="url(#arrow)" />
+        <path d="M 430 470 L 530 470" stroke="#c084fc" stroke-width="3" stroke-dasharray="6,4" marker-end="url(#arrow)" />
+        <path d="M 700 470 L 800 470" stroke="#c084fc" stroke-width="3" marker-end="url(#arrow)" />
+        <path d="M 260 290 L 170 290" stroke="#34d399" stroke-width="2.5" marker-end="url(#arrow)" />
+        <path d="M 260 320 L 170 380" stroke="#fb923c" stroke-width="2" marker-end="url(#arrow)" />
+
+        <!-- Nodes -->
+        <!-- Source -->
+        <g transform="translate(30, 80)">
+          <rect width="140" height="80" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="2" filter="url(#glow)"/>
+          <text x="70" y="32" fill="#fff" font-weight="700" text-anchor="middle" font-size="13">Video Source</text>
+          <text x="70" y="52" fill="#94a3b8" text-anchor="middle" font-size="11">nvv4l2decoder</text>
+          <text x="70" y="68" fill="#38bdf8" text-anchor="middle" font-size="10">1080p @ 30 FPS</text>
+        </g>
+
+        <!-- StreamMux -->
+        <g transform="translate(260, 80)">
+          <rect width="170" height="80" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+          <text x="85" y="32" fill="#fff" font-weight="700" text-anchor="middle" font-size="13">Batch StreamMux</text>
+          <text x="85" y="52" fill="#94a3b8" text-anchor="middle" font-size="11">nvstreammux</text>
+          <text x="85" y="68" fill="#34d399" text-anchor="middle" font-size="10">Batch Size: 1</text>
+        </g>
+
+        <!-- PGIE Inference (TensorRT) -->
+        <g transform="translate(520, 70)">
+          <rect width="170" height="100" rx="8" fill="#042f2e" stroke="#10b981" stroke-width="3" filter="url(#glow)"/>
+          <text x="85" y="32" fill="#34d399" font-weight="800" text-anchor="middle" font-size="13">Primary Inference</text>
+          <text x="85" y="52" fill="#e2e8f0" font-weight="600" text-anchor="middle" font-size="12">YOLOv8s INT8 Engine</text>
+          <text x="85" y="70" fill="#94a3b8" text-anchor="middle" font-size="11">nvinfer / TensorRT 8.6</text>
+          <text x="85" y="86" fill="#10b981" text-anchor="middle" font-size="10">Latency: 2.31 ms</text>
+        </g>
+
+        <!-- Tracker -->
+        <g transform="translate(780, 80)">
+          <rect width="170" height="80" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+          <text x="85" y="32" fill="#fff" font-weight="700" text-anchor="middle" font-size="13">Multi-Object Tracker</text>
+          <text x="85" y="52" fill="#94a3b8" text-anchor="middle" font-size="11">nvtracker (NvSORT)</text>
+          <text x="85" y="68" fill="#38bdf8" text-anchor="middle" font-size="10">Track IDs &amp; Trajectories</text>
+        </g>
+
+        <!-- Analytics -->
+        <g transform="translate(780, 240)">
+          <rect width="170" height="90" rx="8" fill="#1e293b" stroke="#f59e0b" stroke-width="2" filter="url(#glow)"/>
+          <text x="85" y="32" fill="#fbbf24" font-weight="700" text-anchor="middle" font-size="13">Spatial Analytics</text>
+          <text x="85" y="52" fill="#e2e8f0" text-anchor="middle" font-size="11">nvdsanalytics</text>
+          <text x="85" y="70" fill="#f59e0b" text-anchor="middle" font-size="10">Keep-Out Polygons (Red)</text>
+        </g>
+
+        <!-- OSD & Tee -->
+        <g transform="translate(520, 250)">
+          <rect width="170" height="80" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+          <text x="85" y="32" fill="#fff" font-weight="700" text-anchor="middle" font-size="13">On-Screen Display</text>
+          <text x="85" y="52" fill="#94a3b8" text-anchor="middle" font-size="11">nvdsosd</text>
+          <text x="85" y="68" fill="#38bdf8" text-anchor="middle" font-size="10">BBoxes &amp; Zone Overlays</text>
+        </g>
+
+        <!-- Sinks -->
+        <g transform="translate(260, 250)">
+          <rect width="170" height="80" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+          <text x="85" y="32" fill="#fff" font-weight="700" text-anchor="middle" font-size="13">Tee Demuxer</text>
+          <text x="85" y="52" fill="#94a3b8" text-anchor="middle" font-size="11">GStreamer Tee</text>
+          <text x="85" y="68" fill="#94a3b8" text-anchor="middle" font-size="10">Parallel Display &amp; Pub</text>
+        </g>
+
+        <g transform="translate(30, 250)">
+          <rect width="140" height="70" rx="8" fill="#0f172a" stroke="#34d399" stroke-width="2"/>
+          <text x="70" y="30" fill="#34d399" font-weight="700" text-anchor="middle" font-size="12">EGL Display Sink</text>
+          <text x="70" y="48" fill="#94a3b8" text-anchor="middle" font-size="10">nveglglessink</text>
+          <text x="70" y="62" fill="#cbd5e1" text-anchor="middle" font-size="9">Local Monitor</text>
+        </g>
+
+        <g transform="translate(30, 350)">
+          <rect width="140" height="70" rx="8" fill="#0f172a" stroke="#fb923c" stroke-width="2"/>
+          <text x="70" y="30" fill="#fb923c" font-weight="700" text-anchor="middle" font-size="12">RTSP H.264 Stream</text>
+          <text x="70" y="48" fill="#94a3b8" text-anchor="middle" font-size="10">rtspclientsink</text>
+          <text x="70" y="62" fill="#cbd5e1" text-anchor="middle" font-size="9">Port :8554/live</text>
+        </g>
+
+        <!-- MsgConv -->
+        <g transform="translate(260, 420)">
+          <rect width="170" height="90" rx="8" fill="#3b0764" stroke="#a855f7" stroke-width="2"/>
+          <text x="85" y="32" fill="#e9d5ff" font-weight="700" text-anchor="middle" font-size="13">Message Converter</text>
+          <text x="85" y="52" fill="#c084fc" text-anchor="middle" font-size="11">nvmsgconv</text>
+          <text x="85" y="70" fill="#cbd5e1" text-anchor="middle" font-size="10">JSON Alert Generator</text>
+        </g>
+
+        <!-- MsgBroker -->
+        <g transform="translate(530, 420)">
+          <rect width="170" height="90" rx="8" fill="#3b0764" stroke="#c084fc" stroke-width="2" filter="url(#glow)"/>
+          <text x="85" y="32" fill="#e9d5ff" font-weight="700" text-anchor="middle" font-size="13">MQTT Msg Broker</text>
+          <text x="85" y="52" fill="#c084fc" text-anchor="middle" font-size="11">nvmsgbroker (libnvds_mqtt)</text>
+          <text x="85" y="70" fill="#34d399" text-anchor="middle" font-size="10">Topic: safety/sentinel</text>
+        </g>
+
+        <!-- ESP32 Actuator (Closed Loop) -->
+        <g transform="translate(800, 410)">
+          <rect width="210" height="110" rx="10" fill="#450a0a" stroke="#ef4444" stroke-width="3" filter="url(#glow)"/>
+          <text x="105" y="30" fill="#f87171" font-weight="800" text-anchor="middle" font-size="13">ESP32 Physical Actuator</text>
+          <text x="105" y="50" fill="#fca5a5" font-weight="600" text-anchor="middle" font-size="11">Closed-Loop Firmware</text>
+          <text x="105" y="70" fill="#fecaca" text-anchor="middle" font-size="10">Alarm Strobe &amp; Siren</text>
+          <text x="105" y="88" fill="#fbbf24" font-weight="700" text-anchor="middle" font-size="10">Machinery E-Stop Relay</text>
+        </g>
+      </svg>
+    </div>
+
+    <div class="details-pane">
+      <div class="details-card">
+        <h3>Pipeline Specification</h3>
+        <div class="prop-row"><span class="label">PipeGen ID:</span><span class="val">pipegen-sentinel-haz-001</span></div>
+        <div class="prop-row"><span class="label">Target SDK:</span><span class="val">DeepStream 6.3</span></div>
+        <div class="prop-row"><span class="label">Inference Engine:</span><span class="val">TensorRT 8.6 INT8</span></div>
+        <div class="prop-row"><span class="label">Stream Res:</span><span class="val">1920x1080 @ 30fps</span></div>
+      </div>
+
+      <div class="details-card">
+        <h3>Performance Metrics</h3>
+        <div class="prop-row"><span class="label">INT8 Latency:</span><span class="val" style="color: #34d399;">2.31 ms</span></div>
+        <div class="prop-row"><span class="label">INT8 Throughput:</span><span class="val" style="color: #34d399;">432.1 FPS</span></div>
+        <div class="prop-row"><span class="label">FP16 Latency:</span><span class="val">4.82 ms</span></div>
+        <div class="prop-row"><span class="label">End-to-End:</span><span class="val">&lt; 15 ms</span></div>
+        <div class="prop-row"><span class="label">Power Consumption:</span><span class="val">14.2 Watts</span></div>
+      </div>
+
+      <div class="details-card">
+        <h3>Actionable Outputs</h3>
+        <div class="prop-row"><span class="label">Broker Protocol:</span><span class="val">MQTT v3.1.1 / TCP</span></div>
+        <div class="prop-row"><span class="label">Alert Topic:</span><span class="val">safety/sentinel/alerts</span></div>
+        <div class="prop-row"><span class="label">Actuator Node:</span><span class="val">ESP32 DevKit V1</span></div>
+        <div class="prop-row"><span class="label">Trigger Response:</span><span class="val">&lt; 50 ms</span></div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

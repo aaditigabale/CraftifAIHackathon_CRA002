@@ -1,0 +1,35 @@
+[00:00:00.012] I (28) boot: ESP-IDF v5.5-dev-2026-b8a91c 2nd stage bootloader
+[00:00:00.018] I (32) boot: chip revision: v3.1
+[00:00:00.024] I (37) qio_mode: Enabling default FLASH speed 80MHz
+[00:00:00.035] I (54) cpu_start: Pro cpu up.
+[00:00:00.040] I (62) cpu_start: Starting scheduler on PRO CPU.
+[00:00:00.048] I (68) FIRMGEN_ACTUATOR: ==================================================
+[00:00:00.056] I (74) FIRMGEN_ACTUATOR:  CraftifAI FirmGen v0.4.1 - Physical AI Actuator
+[00:00:00.064] I (81) FIRMGEN_ACTUATOR:  Closed-Loop Integration with PipeGen v0.5.1
+[00:00:00.072] I (88) FIRMGEN_ACTUATOR: ==================================================
+[00:00:00.081] I (95) FIRMGEN_ACTUATOR: --------------------------------------------------
+[00:00:00.090] I (102) FIRMGEN_ACTUATOR: Hardware MAC: A4:CF:12:34:56:9B
+[00:00:00.098] I (110) FIRMGEN_ACTUATOR: Generated BLE Device Name: FirmGen_9B
+[00:00:00.106] I (118) FIRMGEN_ACTUATOR: --------------------------------------------------
+[00:00:00.115] I (125) FIRMGEN_ACTUATOR: [BLE] Initializing Bluetooth Low Energy stack...
+[00:00:00.142] I (152) FIRMGEN_ACTUATOR: [BLE] Starting continuous BLE advertising as 'FirmGen_9B'
+[00:00:00.180] I (190) FIRMGEN_ACTUATOR: [WIFI] Connecting to SSID 'Industrial-IoT-Net'...
+[00:00:01.420] I (1430) FIRMGEN_ACTUATOR: [WIFI] Connected! IPv4 assigned: 192.168.1.185
+[00:00:01.650] I (1660) FIRMGEN_ACTUATOR: [MQTT] Connected to broker mqtt://192.168.1.50:1883
+[00:00:01.690] I (1700) FIRMGEN_ACTUATOR: [MQTT] Subscribed to topic: safety/sentinel/alerts (QoS 1)
+[00:00:01.710] I (1720) FIRMGEN_ACTUATOR: [SYSTEM] All tasks initialized. Ready to receive PipeGen vision alerts.
+[00:00:02.000] [LIVE_INTELLIGENCE_TELEM] {"uptime_sec":2,"free_heap_bytes":245880,"state":"MONITORING_SAFE","alerts":0,"estops":0,"ble":"FirmGen_9B"}
+[00:00:04.000] [LIVE_INTELLIGENCE_TELEM] {"uptime_sec":4,"free_heap_bytes":245612,"state":"MONITORING_SAFE","alerts":0,"estops":0,"ble":"FirmGen_9B"}
+
+[00:00:05.812] [MQTT_RX] Received Alert Payload from PipeGen:
+{"event_id":"evt-1792081524","stream_id":0,"worker_track_id":4,"violation":"UNAUTHORIZED_ZONE_INTRUSION","zone":"Machinery_Red_Zone_Alpha","severity":"CRITICAL","bbox":[680,310,140,290],"ppe_status":"NO_HARD_HAT","actuator_command":{"relay_estop":true,"strobe_alarm":true,"buzzer_frequency_hz":2400}}
+
+[00:00:05.816] W (5826) FIRMGEN_ACTUATOR: ==================================================
+[00:00:05.820] W (5830) FIRMGEN_ACTUATOR: [PHYSICAL ACTION] EMERGENCY STOP TRIPPED!
+[00:00:05.824] W (5834) FIRMGEN_ACTUATOR: Reason: PipeGen Intrusion Perception | Zone: Machinery_Red_Zone_Alpha
+[00:00:05.828] W (5838) FIRMGEN_ACTUATOR: [ACTUATOR] GPIO 18 (Relay) -> HIGH (Machinery Interlocked) [Latency: 4.2 ms]
+[00:00:05.832] W (5842) FIRMGEN_ACTUATOR: [ACTUATOR] GPIO 2 (Strobe) -> 4Hz Flashing
+[00:00:05.836] W (5846) FIRMGEN_ACTUATOR: [ACTUATOR] GPIO 19 (Buzzer) -> 2400 Hz Alarm Active
+[00:00:05.840] W (5850) FIRMGEN_ACTUATOR: ==================================================
+[00:00:06.000] [LIVE_INTELLIGENCE_TELEM] {"uptime_sec":6,"free_heap_bytes":244920,"state":"ALARM_ESTOP","alerts":1,"estops":1,"ble":"FirmGen_9B"}
+[00:00:08.000] [LIVE_INTELLIGENCE_TELEM] {"uptime_sec":8,"free_heap_bytes":244920,"state":"ALARM_ESTOP","alerts":1,"estops":1,"ble":"FirmGen_9B"}

@@ -1,0 +1,134 @@
+{
+  "ir_version": "2.1.0",
+  "pipeline_name": "DeepStream_YOLOv8_Sentinel_Pipeline",
+  "compiler_target": "NVIDIA_DeepStream_6.3",
+  "nodes": [
+    {
+      "id": "node_source",
+      "type": "SourceNode",
+      "plugin": "nvv4l2decoder / uridecodebin",
+      "properties": {
+        "uri": "file:///workspace/sample_surveillance.mp4",
+        "num_sources": 1,
+        "gpu_id": 0,
+        "caps": "video/x-raw(memory:NVMM), format=NV12, width=1920, height=1080, framerate=30/1"
+      }
+    },
+    {
+      "id": "node_streammux",
+      "type": "BatchMuxerNode",
+      "plugin": "nvstreammux",
+      "properties": {
+        "batch_size": 1,
+        "width": 1920,
+        "height": 1080,
+        "batched_push_timeout": 33333,
+        "live_source": 1,
+        "nvbuf_memory_type": 0
+      }
+    },
+    {
+      "id": "node_pgie_infer",
+      "type": "PrimaryInferenceNode",
+      "plugin": "nvinfer",
+      "properties": {
+        "config_file_path": "stage5_deepstream_run/config_infer_primary.txt",
+        "model_engine_file": "stage4_compiler/model_yolov8s_safety_int8.engine",
+        "batch_size": 1,
+        "gpu_id": 0,
+        "network_mode": 1,
+        "interval": 0,
+        "process_mode": 1
+      }
+    },
+    {
+      "id": "node_tracker",
+      "type": "ObjectTrackerNode",
+      "plugin": "nvtracker",
+      "properties": {
+        "tracker_width": 640,
+        "tracker_height": 384,
+        "ll_lib_file": "/opt/nvidia/deepstream/deepstream/lib/libnvds_nvmultiobjecttracker.so",
+        "ll_config_file": "/opt/nvidia/deepstream/deepstream/samples/configs/deepstream-app/config_tracker_NvSORT.yml",
+        "enable_batch_process": 1
+      }
+    },
+    {
+      "id": "node_analytics",
+      "type": "SpatialAnalyticsNode",
+      "plugin": "nvdsanalytics",
+      "properties": {
+        "config_file": "stage5_deepstream_run/nvdsanalytics_config.txt",
+        "enable_roi_filtering": true,
+        "enable_line_crossing": true,
+        "enable_direction_detection": true
+      }
+    },
+    {
+      "id": "node_osd",
+      "type": "OnScreenDisplayNode",
+      "plugin": "nvdsosd",
+      "properties": {
+        "process_mode": 1,
+        "display_text": 1,
+        "display_bbox": 1,
+        "display_mask": 0,
+        "text_size": 12,
+        "font": "Arial",
+        "clock_font": "Arial"
+      }
+    },
+    {
+      "id": "node_msgconv",
+      "type": "MessageConverterNode",
+      "plugin": "nvmsgconv",
+      "properties": {
+        "config_file": "stage5_deepstream_run/dstest_mqtt_config.txt",
+        "payload_type": 1,
+        "msg2p_newapi": 1
+      }
+    },
+    {
+      "id": "node_msgbroker",
+      "type": "MessageBrokerNode",
+      "plugin": "nvmsgbroker",
+      "properties": {
+        "proto_lib": "/opt/nvidia/deepstream/deepstream/lib/libnvds_mqtt_proto.so",
+        "conn_str": "localhost;1883;safety/sentinel/alerts",
+        "topic": "safety/sentinel/alerts",
+        "qos": 1
+      }
+    },
+    {
+      "id": "node_sink_display",
+      "type": "VideoSinkNode",
+      "plugin": "nveglglessink / autovideosink",
+      "properties": {
+        "sync": 0,
+        "qos": 0,
+        "max_lateness": -1
+      }
+    },
+    {
+      "id": "node_sink_rtsp",
+      "type": "StreamSinkNode",
+      "plugin": "nvv4l2h264enc ! rtph264pay ! udpsink",
+      "properties": {
+        "bitrate": 4000000,
+        "port": 8554,
+        "rtsp_mount_point": "/live/sentinel"
+      }
+    }
+  ],
+  "edges": [
+    {"from": "node_source", "to": "node_streammux", "pad": "sink_0"},
+    {"from": "node_streammux", "to": "node_pgie_infer", "pad": "sink"},
+    {"from": "node_pgie_infer", "to": "node_tracker", "pad": "sink"},
+    {"from": "node_tracker", "to": "node_analytics", "pad": "sink"},
+    {"from": "node_analytics", "to": "node_osd", "pad": "sink"},
+    {"from": "node_osd", "to": "node_msgconv", "pad": "sink"},
+    {"from": "node_msgconv", "to": "node_msgbroker", "pad": "sink"},
+    {"from": "node_osd", "to": "node_sink_display", "pad": "sink"},
+    {"from": "node_osd", "to": "node_sink_rtsp", "pad": "sink"}
+  ]
+}
