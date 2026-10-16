@@ -14,8 +14,8 @@
 
 You can experience the live production prototype directly in your browser without installing dependencies:
 
-live demo-https://screenapp.io/app/share/A8mRX3YYlTtF1rJQZXobDtGI
-
+live demo-https://motherboard-towers-certified-brake.trycloudflare.com
+video link-https://screenapp.io/app/share/A8mRX3YYlTtF1rJQZXobDtGI
 ## 🏢 Executive Summary & Client Value Proposition
 
 Industrial manufacturing floors, robotic assembly lines, and automated logistics warehouses are rife with high-speed machinery capable of causing catastrophic injuries. Standard security CCTV cameras only serve as passive recording devices — they document incidents **after** harm has already occurred.
