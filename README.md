@@ -14,14 +14,7 @@
 
 You can experience the live production prototype directly in your browser without installing dependencies:
 
-- **🔴 Live Sentinel Interactive Dashboard:**  
-  👉 **[https://333fb96bc2a075.lhr.life](https://333fb96bc2a075.lhr.life)** *(Public HTTPS URL)*  
-  *(Alternative Localhost URL: [http://localhost:3000](http://localhost:3000))*
-- **📊 Stage 2 Pipeline IR Interactive Visualizer:**  
-  👉 **[https://333fb96bc2a075.lhr.life/pipeline_visualizer.html](https://333fb96bc2a075.lhr.life/pipeline_visualizer.html)**  
-  *(Interactive DeepStream DAG node graph for submission evidence and architecture inspection)*
-
----
+live demo-https://screenapp.io/app/share/A8mRX3YYlTtF1rJQZXobDtGI
 
 ## 🏢 Executive Summary & Client Value Proposition
 
@@ -226,8 +219,3 @@ chmod +x run.sh
 
 ---
 
-## 📋 Hackathon Submission Guide
-
-- **Official Submission Form (PipeGen):** [https://forms.gle/eJyeCKCG2UH757QZ8](https://forms.gle/eJyeCKCG2UH757QZ8)
-- **CraftifAI Developer Portal:** [https://developer.craftifai.com/dashboard?tab=downloads](https://developer.craftifai.com/dashboard?tab=downloads)
-- **Pre-formatted Submission Answers:** Available in [`submission/SUBMISSION_REPORT.md`](file:///c:/Users/KAUSTUBH%20PATIL/OneDrive/Desktop/krushnal/submission/SUBMISSION_REPORT.md).
